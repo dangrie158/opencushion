@@ -1,0 +1,27 @@
+{
+  "name": "hx711",
+  "version": "0.0.1",
+  "description": "C Driver and Node Binding for HX711 Load Cell Amp",
+  "main": "hx711.js",
+  "directories": {
+    "example": "examples"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "install": "node-gyp rebuild"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dangrie158/SmartScale.git"
+  },
+  "author": "Daniel Grießhaber",
+  "license": "MIT",
+  "gypfile": true,
+  "bugs": {
+    "url": "https://github.com/dangrie158/SmartScale/issues"
+  },
+  "homepage": "https://github.com/dangrie158/SmartScale#readme",
+  "dependencies": {
+    "bindings": "^1.2.1"
+  }
+}

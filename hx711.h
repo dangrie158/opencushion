@@ -1,7 +1,7 @@
 #include <inttypes.h>
 
-#define SCLK 7
-#define DATA 0
+#ifndef _HX711_H_
+#define _HX711_H_
 
 //channel A, gain 128
 #define GAIN_128 128
@@ -18,8 +18,11 @@ private:
 	float mScale;
 	int32_t mOffset;
 
+	uint8_t mClockPin;
+	uint8_t mDataPin;
+
 public:
-	HX711();
+	HX711(uint8_t clockPin, uint8_t dataPin);
 	void initialize();
 	bool isReady();
 	void setGain(uint8_t gain);
@@ -33,3 +36,5 @@ public:
 	void powerDown();
 	void powerUp();
 };
+
+#endif //_HX711_H_

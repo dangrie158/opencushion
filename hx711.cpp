@@ -4,10 +4,12 @@
 
 #include "hx711.h"
 
-HX711::HX711() :
+HX711::HX711(uint8_t clockPin, uint8_t dataPin) :
 	mGainBits(1),
 	mScale(1.0f),
-	mOffset(0)
+	mOffset(0),
+	mClockPin(clockPin),
+	mDataPin(dataPin)
 {
 	this->initialize();
 }
@@ -16,12 +18,12 @@ void HX711::initialize(){
 	if(wiringPiSetup() == -1){
 		printf("initialization failed");
 	}
-	pinMode(SCLK, OUTPUT);
-	pinMode(DATA, INPUT);
+	pinMode(mClockPin, OUTPUT);
+	pinMode(mDataPin, INPUT);
 }
 
 bool HX711::isReady(){
-	return digitalRead(DATA) == LOW;
+	return digitalRead(mDataPin) == LOW;
 }
 
 void HX711::setGain(uint8_t gain){
@@ -40,7 +42,7 @@ void HX711::setGain(uint8_t gain){
 		break;
 	}
 
-	digitalWrite(SCLK, LOW);
+	digitalWrite(mClockPin, LOW);
 	read();
 }
 
@@ -51,18 +53,18 @@ int32_t HX711::read() {
 	int32_t data = 0;
 	// pulse the clock pin 24 times to read the data
 	for(uint8_t i = 24; i--;){
-		digitalWrite(SCLK, HIGH);
+		digitalWrite(mClockPin, HIGH);
 
-		digitalRead(DATA);
-		data |= (digitalRead(DATA) << i);
+		digitalRead(mDataPin);
+		data |= (digitalRead(mDataPin) << i);
 
-		digitalWrite(SCLK, LOW);
+		digitalWrite(mClockPin, LOW);
 	}
 
 	// set the channel and the gain factor for the next reading using the clock pin
 	for (int i = 0; i < mGainBits; i++) {
-		digitalWrite(SCLK, HIGH);
-		digitalWrite(SCLK, LOW);
+		digitalWrite(mClockPin, HIGH);
+		digitalWrite(mClockPin, LOW);
 	}
 
 	if(data & 0x800000){
@@ -102,21 +104,21 @@ void HX711::setOffset(int32_t offset) {
 }
 
 void HX711::powerDown() {
-	digitalWrite(SCLK, LOW);
-	digitalWrite(SCLK, HIGH);
+	digitalWrite(mClockPin, LOW);
+	digitalWrite(mClockPin, HIGH);
 }
 
 void HX711::powerUp() {
-	digitalWrite(SCLK, LOW);
+	digitalWrite(mClockPin, LOW);
 }
 
 int main(){
-	HX711 sensor;
+	HX711 sensor(7, 0);
 	sensor.tare();
 	sensor.setScale(16000);
 	while(true){
 		printf("%f\n", sensor.getUnits());
-		//printf("%d\n", sensor.readAverage());
+		printf("%d\n", sensor.readAverage());
 	}
 }
 
