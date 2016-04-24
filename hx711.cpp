@@ -30,10 +30,10 @@ void HX711::setGain(uint8_t gain){
 			this->mGainBits = 1;
 		break;
 		case GAIN_64:
-			this->mGainBits = 2;
+			this->mGainBits = 3;
 		break;
 		case GAIN_32:
-			this->mGainBits = 3;
+			this->mGainBits = 2;
 		break;
 		default:
 			//invalid gain, ignore
@@ -44,19 +44,19 @@ void HX711::setGain(uint8_t gain){
 	read();
 }
 
-uint32_t HX711::read() {
+int32_t HX711::read() {
 	// wait for the chip to become ready
 	while (!this->isReady());
 
-	uint8_t data[3] = {0};
-
+	int32_t data = 0;
 	// pulse the clock pin 24 times to read the data
-	for (uint8_t j = 3; j--;) {
-		for (uint8_t i = 8; i--;) {
-			digitalWrite(SCLK, HIGH);
-			data[j] |= (digitalRead(DATA) << i);
-			digitalWrite(SCLK, LOW);
-		}
+	for(uint8_t i = 24; i--;){
+		digitalWrite(SCLK, HIGH);
+
+		digitalRead(DATA);
+		data |= (digitalRead(DATA) << i);
+
+		digitalWrite(SCLK, LOW);
 	}
 
 	// set the channel and the gain factor for the next reading using the clock pin
@@ -65,13 +65,15 @@ uint32_t HX711::read() {
 		digitalWrite(SCLK, LOW);
 	}
 
-	data[2] ^= 0x80;
+	if(data & 0x800000){
+		data |= (long) ~0xffffff;
+	}
 
-	return ((uint32_t) data[2] << 16) | ((uint32_t) data[1] << 8) | (uint32_t) data[0];
+	return data;
 }
 
-uint32_t HX711::readAverage(uint8_t times) {
-	uint64_t sum = 0;
+int32_t HX711::readAverage(uint8_t times) {
+	int64_t sum = 0;
 	for (uint8_t i = 0; i < times; i++) {
 		sum += read();
 	}
@@ -110,10 +112,11 @@ void HX711::powerUp() {
 
 int main(){
 	HX711 sensor;
-	sensor.tare(10);
+	sensor.tare();
+	sensor.setScale(16000);
 	while(true){
 		printf("%f\n", sensor.getUnits());
-		//sensor.read();
+		//printf("%d\n", sensor.readAverage());
 	}
 }
 

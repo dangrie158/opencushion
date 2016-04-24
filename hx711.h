@@ -23,8 +23,8 @@ public:
 	void initialize();
 	bool isReady();
 	void setGain(uint8_t gain);
-	uint32_t read();
-	uint32_t readAverage(uint8_t times = 10);
+	int32_t read();
+	int32_t readAverage(uint8_t times = 10);
 	int32_t getRawValue(uint8_t times = 10);
 	float getUnits(uint8_t times = 10);
 	void tare(uint8_t times = 10);
