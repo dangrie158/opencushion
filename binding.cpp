@@ -40,6 +40,8 @@ void HX711Wrapper::InitModule(Local<Object> exports) {
 	NODE_SET_PROTOTYPE_METHOD(tpl, "tare", tare);
 	NODE_SET_PROTOTYPE_METHOD(tpl, "getUnits", getUnits);
 	NODE_SET_PROTOTYPE_METHOD(tpl, "setGain", setGain);
+	NODE_SET_PROTOTYPE_METHOD(tpl, "getOffset", getOffset);
+        NODE_SET_PROTOTYPE_METHOD(tpl, "getScale", getScale);
 
 	constructor.Reset(isolate, tpl->GetFunction());
 	exports->Set(String::NewFromUtf8(isolate, "HX711"), tpl->GetFunction());
@@ -107,6 +109,24 @@ void HX711Wrapper::setGain(const FunctionCallbackInfo<Value>& args) {
         obj->mSensor->setGain(gainArg);
 
         args.GetReturnValue().Set(Null(isolate));
+}
+
+void HX711Wrapper::getOffset(const FunctionCallbackInfo<Value>& args) {
+        Isolate* isolate = args.GetIsolate();
+
+        HX711Wrapper* obj = ObjectWrap::Unwrap<HX711Wrapper>(args.Holder());
+        int32_t value = obj->mSensor->getOffset();
+
+        args.GetReturnValue().Set(Number::New(isolate, value));
+}
+
+void HX711Wrapper::getScale(const FunctionCallbackInfo<Value>& args) {
+        Isolate* isolate = args.GetIsolate();
+
+        HX711Wrapper* obj = ObjectWrap::Unwrap<HX711Wrapper>(args.Holder());
+        float value = obj->mSensor->getScale();
+
+        args.GetReturnValue().Set(Number::New(isolate, value));
 }
 
 void HX711Wrapper::New(const FunctionCallbackInfo<Value>& args) {

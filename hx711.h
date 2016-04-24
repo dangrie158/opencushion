@@ -35,6 +35,8 @@ public:
 	void setOffset(int32_t offset);
 	void powerDown();
 	void powerUp();
+	int32_t getOffset();
+	float getScale();
 };
 
 #endif //_HX711_H_

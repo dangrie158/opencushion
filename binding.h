@@ -18,6 +18,8 @@ private:
 	static void tare(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void getUnits(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static void setGain(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void getScale(const v8::FunctionCallbackInfo<v8::Value>& args);
+	static void getOffset(const v8::FunctionCallbackInfo<v8::Value>& args);
 	HX711* mSensor;
 };
 

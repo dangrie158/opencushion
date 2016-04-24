@@ -112,6 +112,14 @@ void HX711::powerUp() {
 	digitalWrite(mClockPin, LOW);
 }
 
+int32_t HX711::getOffset(){
+	return this->mOffset;
+}
+
+float HX711::getScale(){
+	return this->mScale;
+}
+
 int main(){
 	HX711 sensor(7, 0);
 	sensor.tare();
