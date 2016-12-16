@@ -15,8 +15,8 @@ using v8::Persistent;
 
 Persistent<Function> HX711Wrapper::constructor;
 
-HX711Wrapper::HX711Wrapper(uint8_t clockPin, uint8_t dataPin) :
-	mSensor(new HX711(clockPin, dataPin))
+HX711Wrapper::HX711Wrapper(uint8_t clockPin, uint8_t dataPin, uint8_t skipSetup) :
+	mSensor(new HX711(clockPin, dataPin, skipSetup))
 {
 
 }
@@ -144,7 +144,11 @@ void HX711Wrapper::New(const FunctionCallbackInfo<Value>& args) {
 		uint8_t clockPinArg = (uint8_t)args[0]->NumberValue();
 		uint8_t dataPinArg = (uint8_t)args[1]->NumberValue();
 
-    		HX711Wrapper* obj = new HX711Wrapper(clockPinArg, dataPinArg);
+		uint8_t skipSetup = 0;
+		if (args.Length() >= 3 )
+			skipSetup = (uint8_t)args[2]->BooleanValue();
+
+    		HX711Wrapper* obj = new HX711Wrapper(clockPinArg, dataPinArg, skipSetup);
     		obj->Wrap(args.This());
     		args.GetReturnValue().Set(args.This());
   	} else {
