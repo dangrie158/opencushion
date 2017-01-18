@@ -22,8 +22,8 @@ private:
 	uint8_t mDataPin;
 
 public:
-	HX711(uint8_t clockPin, uint8_t dataPin);
-	void initialize();
+	HX711(uint8_t clockPin, uint8_t dataPin, uint8_t skipSetup);
+	void initialize(uint8_t skipSetup);
 	bool isReady();
 	void setGain(uint8_t gain);
 	int32_t read();

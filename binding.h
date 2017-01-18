@@ -8,7 +8,7 @@ public:
 	static void InitModule(v8::Local<v8::Object> exports);
 
 private:
-	explicit HX711Wrapper(uint8_t clockPin, uint8_t dataPin);
+	explicit HX711Wrapper(uint8_t clockPin, uint8_t dataPin, uint8_t skipSetup);
 	~HX711Wrapper();
   	static void New(const v8::FunctionCallbackInfo<v8::Value>& args);
 	static v8::Persistent<v8::Function> constructor;
